@@ -15,22 +15,21 @@ import requests
 #import msvcrt
 
 """
-hexo 博客专用，向百度站长平台提交所有网址
-
-本脚本必须放在hexo博客的根目录下执行！需要已安装生成百度站点地图的插件。
-百度站长平台提交链接：http://zhanzhang.baidu.com/linksubmit/index
-主动推送：最为快速的提交方式，推荐您将站点当天新产出链接立即通过此方式推送给百度，以保证新链接可以及时被百度收录。
-从中找到自己的接口调用地址
-
-python环境：
-pip install beautifulsoup4
-pip install requests
-xcode-select --install
-pip install lxml
+//hexo 博客专用，向百度站长平台提交所有网址
+//
+//本脚本必须放在hexo博客的根目录下执行！需要已安装生成百度站点地图的插件。
+//百度站长平台提交链接：http://zhanzhang.baidu.com/linksubmit/index
+//主动推送：最为快速的提交方式，推荐您将站点当天新产出链接立即通过此方式推送给百度，以保证新链接可以及时被百度收录。
+//从中找到自己的接口调用地址
+//
+//python环境：
+//pip install beautifulsoup4
+//pip install requests
+//xcode-select --install
+//pip install lxml
 
 """
 
-# ❌❌❌ 抄的需要更改这个URL！！这是我的！！❌❌❌
 url = 'http://data.zz.baidu.com/urls?site=https://zhenkaijia.github.io&token=oMpMMs4ZVGGwZs4V'
 baidu_sitemap = os.path.join(sys.path[0], 'public', 'baidusitemap.xml')
 google_sitemap = os.path.join(sys.path[0], 'public', 'sitemap.xml')
@@ -67,7 +66,7 @@ def postUrls(urls):
 if __name__ == '__main__':
 
 urls = getUrls()
-result = postUrls(urls)
-print("提交结果：")
-print(result)
+    result = postUrls(urls)
+    print("提交结果：")
+    print(result)
 #    msvcrt.getch()
