@@ -1,2 +1,2 @@
-http://yoursite.com/2018/09/26/大笨蛋文章/
+http://yoursite.com/2018/09/26/crash分析/
 http://yoursite.com/2017/09/14/算法排序/
