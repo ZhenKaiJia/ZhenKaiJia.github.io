@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="项目实战," />
+  <meta name="keywords" content="总结," />
 
 
 
@@ -93,18 +93,24 @@
 
 
 
-<meta name="description" content="结合 SDWebImage 修改图片显示效果原理 method swizzling 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 ObjC runtime 的特性, 而 method swizzling 的核心方法就是 method_exchangeImplementations(SEL origin, SEL swizzle)使用这个方法就可以在运行时动态地改变原有的方法实现。">
-<meta name="keywords" content="项目实战">
+<meta name="description" content="1、注册CocoaPods不确定自己是否注册的可以使用命令查看   pod trunk me   如果没有注册，输入一下命令   pod trunk register 你的邮箱 ‘你的名字’  –verbose（加上--verbose可以查看详细信息,方便出错时查看）   注册完成之后会给你的邮箱发个邮件,进入邮箱邮件里面有个链接,需要点击确认一下。 注册完成后使用pod trunk me检验注册">
+<meta name="keywords" content="总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="method swizzling应用场景">
-<meta property="og:url" content="http://yoursite.com/2017/03/05/MethodSwizzling应用场景/index.html">
+<meta property="og:title" content="创建自己私有pod">
+<meta property="og:url" content="http://yoursite.com/2019/01/21/私有库制作/index.html">
 <meta property="og:site_name" content="岁月如歌">
-<meta property="og:description" content="结合 SDWebImage 修改图片显示效果原理 method swizzling 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 ObjC runtime 的特性, 而 method swizzling 的核心方法就是 method_exchangeImplementations(SEL origin, SEL swizzle)使用这个方法就可以在运行时动态地改变原有的方法实现。">
+<meta property="og:description" content="1、注册CocoaPods不确定自己是否注册的可以使用命令查看   pod trunk me   如果没有注册，输入一下命令   pod trunk register 你的邮箱 ‘你的名字’  –verbose（加上--verbose可以查看详细信息,方便出错时查看）   注册完成之后会给你的邮箱发个邮件,进入邮箱邮件里面有个链接,需要点击确认一下。 注册完成后使用pod trunk me检验注册">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-10T15:24:01.378Z">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005B0CRugy1fzemlixakkj30nd0hu76c.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005B0CRugy1fzempl4l4fj30ws0ikq5q.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005B0CRugy1fzemrvl71rj30ho02ht8x.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005B0CRugy1fzemyi64b7j30pe0oawhd.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/005B0CRugy1fzen80iokvj30ws0ikq5q.jpg">
+<meta property="og:updated_time" content="2019-01-21T16:06:19.236Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="method swizzling应用场景">
-<meta name="twitter:description" content="结合 SDWebImage 修改图片显示效果原理 method swizzling 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 ObjC runtime 的特性, 而 method swizzling 的核心方法就是 method_exchangeImplementations(SEL origin, SEL swizzle)使用这个方法就可以在运行时动态地改变原有的方法实现。">
+<meta name="twitter:title" content="创建自己私有pod">
+<meta name="twitter:description" content="1、注册CocoaPods不确定自己是否注册的可以使用命令查看   pod trunk me   如果没有注册，输入一下命令   pod trunk register 你的邮箱 ‘你的名字’  –verbose（加上--verbose可以查看详细信息,方便出错时查看）   注册完成之后会给你的邮箱发个邮件,进入邮箱邮件里面有个链接,需要点击确认一下。 注册完成后使用pod trunk me检验注册">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/005B0CRugy1fzemlixakkj30nd0hu76c.jpg">
 
 
 
@@ -132,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/05/MethodSwizzling应用场景/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/21/私有库制作/"/>
 
 
 
 
 
-  <title>method swizzling应用场景 | 岁月如歌</title>
+  <title>创建自己私有pod | 岁月如歌</title>
   
 
 
@@ -277,7 +283,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/05/MethodSwizzling应用场景/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/21/私有库制作/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Justin Jia">
@@ -294,7 +300,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">method swizzling应用场景</h2>
+          <h2 class="post-title" itemprop="name headline">创建自己私有pod</h2>
         
 
         <div class="post-meta">
@@ -306,8 +312,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-05T18:25:42+08:00">
-                2017-03-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-21T11:03:42+08:00">
+                2019-01-21
               </time>
             
 
@@ -363,11 +369,85 @@
       
 
       
-        <h3 id="结合-SDWebImage-修改图片显示效果"><a href="#结合-SDWebImage-修改图片显示效果" class="headerlink" title="结合 SDWebImage 修改图片显示效果"></a>结合 SDWebImage 修改图片显示效果</h3><p>原理 <code>method swizzling</code> 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 <code>ObjC runtime</code> 的特性, 而 <code>method swizzling</code> 的核心方法就是 <code>method_exchangeImplementations(SEL origin, SEL swizzle)</code>使用这个方法就可以在运行时动态地改变原有的方法实现。</p>
+        <h3 id="1、注册CocoaPods"><a href="#1、注册CocoaPods" class="headerlink" title="1、注册CocoaPods"></a><strong>1、注册CocoaPods</strong></h3><p>不确定自己是否注册的可以使用命令查看</p>
+<blockquote>
+<ul>
+<li>pod trunk me</li>
+</ul>
+</blockquote>
+<p>如果没有注册，输入一下命令</p>
+<blockquote>
+<ul>
+<li>pod trunk register 你的邮箱 ‘你的名字’  –verbose（加上<code>--verbose</code>可以查看详细信息,方便出错时查看）</li>
+</ul>
+</blockquote>
+<p>注册完成之后会给你的邮箱发个邮件,进入邮箱邮件里面有个链接,需要点击确认一下。</p>
+<p>注册完成后使用<code>pod trunk me</code>检验注册是否成功</p>
 <a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">+ (void)load &#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        </span><br><span class="line">        Class class = [self class];</span><br><span class="line">        </span><br><span class="line">        SEL originalSelector = @selector(sd_setImageWithURL:placeholderImage:);</span><br><span class="line">        SEL swizzledSelector = @selector(sd_fadeSetImageWithURL:placeholderImage:);</span><br><span class="line">        </span><br><span class="line">        Method originalMethod = class_getInstanceMethod(class, originalSelector);</span><br><span class="line">        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);</span><br><span class="line">        </span><br><span class="line">        BOOL success = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));</span><br><span class="line">        if (success) &#123;</span><br><span class="line">            class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            method_exchangeImplementations(originalMethod, swizzledMethod);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (void)sd_fadeSetImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder &#123;</span><br><span class="line">    </span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    </span><br><span class="line">    [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageAvoidAutoSetImage completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) &#123;</span><br><span class="line">        if (!weakSelf || error) &#123;</span><br><span class="line">            return ;</span><br><span class="line">        &#125;</span><br><span class="line">        weakSelf.image = image;</span><br><span class="line">        if (image || cacheType == SDImageCacheTypeNone) &#123;</span><br><span class="line">            CATransition *transition = [CATransition animation];</span><br><span class="line">            transition.duration = 1;</span><br><span class="line">            transition.type = kCATransitionFade;</span><br><span class="line">            transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];</span><br><span class="line">            [self.layer addAnimation:transition forKey:nil];</span><br><span class="line">        &#125;</span><br><span class="line">        [weakSelf setNeedsLayout];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="http://www.tanhao.me/code/160723.html/" target="_blank" rel="noopener">参考链接</a><br><a href="https://github.com/ZhenKaiJia/MethodSwizzlingDemo" target="_blank" rel="noopener">Demo 地址</a></p>
+<h3 id="2、github创建新仓库"><a href="#2、github创建新仓库" class="headerlink" title="2、github创建新仓库"></a><strong>2、github创建新仓库</strong></h3><p><img src="http://ww1.sinaimg.cn/large/005B0CRugy1fzemlixakkj30nd0hu76c.jpg" alt=""></p>
+<h3 id="3、创建本地代码库"><a href="#3、创建本地代码库" class="headerlink" title="3、创建本地代码库"></a><strong>3、创建本地代码库</strong></h3><p>终端输入<br><code>pod lib create 库的名字</code></p>
+<p>情况顺利会开始回答问题，根据自己情况一次选择</p>
+<p><img src="http://ww1.sinaimg.cn/large/005B0CRugy1fzempl4l4fj30ws0ikq5q.jpg" alt=""></p>
+<p><strong>注意</strong></p>
+<p>如果出现以下情况，证明本地已经存在这个项目了，找到删除即可</p>
+<p><img src="http://ww1.sinaimg.cn/large/005B0CRugy1fzemrvl71rj30ho02ht8x.jpg" alt=""></p>
+<h3 id="4、本地代码创建成功，修改podspecs索引文件"><a href="#4、本地代码创建成功，修改podspecs索引文件" class="headerlink" title="4、本地代码创建成功，修改podspecs索引文件"></a><strong>4、本地代码创建成功，修改podspecs索引文件</strong></h3><p>cd到本地代码文件夹</p>
+<p><img src="http://ww1.sinaimg.cn/large/005B0CRugy1fzemyi64b7j30pe0oawhd.jpg" alt=""></p>
+<p>修改.podspec文件</p>
+<blockquote>
+<ul>
+<li>s.name：名称，pod search搜索的关键词,注意这里一定要和.podspec的名称一样,否则报错</li>
+<li>s.version：版本号</li>
+<li>s.author:作者</li>
+<li>s.homepage:项目主页地址，文章开头创建的github地址</li>
+<li>s.summary: 项目简介</li>
+<li>s.source:项目源码所在地址，文章开头创建的github地址</li>
+<li>s.license:许可证 <code>s.license = { :type =&gt; &#39;MIT&#39;, :file =&gt; &#39;LICENSE&#39; }</code></li>
+<li>s.platform:项目支持平台</li>
+<li>s.requires_arc: 是否支持ARC</li>
+<li>s.source_files:需要包含的源文件<code>s.source_files = &#39;PrivatePodDemo/Classes/**/*&#39;</code></li>
+<li>s.public_header_files:需要包含的头文件</li>
+<li>s.ios.deployment_target:支持的pod最低版本</li>
+<li>s.dependency:依赖库，不能依赖未发布的库</li>
+</ul>
+</blockquote>
+<h3 id="5、验证自己的podspec"><a href="#5、验证自己的podspec" class="headerlink" title="5、验证自己的podspec"></a><strong>5、验证自己的podspec</strong></h3><p>提交代码到远程仓库</p>
+<p>依次输入命令</p>
+<blockquote>
+<ul>
+<li>git add .<br>*git commit -m “commit message”<br>git remote add origin 远程仓库代码地址<br>git push origin master<br>git tag 版本号<br>git push –tag</li>
+</ul>
+</blockquote>
+<p>使用一下命令，确认自己的podspec文件语法不存在错误</p>
+<blockquote>
+<ul>
+<li><code>pod spec lint PrivatePodDemo.podspec --verbose</code></li>
+</ul>
+</blockquote>
+<p>这个时候你可能会出现这样的错误</p>
+<p><img src="http://ww1.sinaimg.cn/large/005B0CRugy1fzen80iokvj30ws0ikq5q.jpg" alt=""></p>
+<p>莫慌，这是因为远端还没有0.0.1分支，出现原因可能是tag没有成功上传到远端。解决办法：依次输入下面命令</p>
+<blockquote>
+<ul>
+<li>git tag -m “pod spec” “0.0.1”</li>
+<li>git push origin –tags</li>
+</ul>
+</blockquote>
+<p><strong>开始验证</strong> </p>
+<blockquote>
+<ul>
+<li>pod spec lint PrivatePodDemo.podspec</li>
+</ul>
+</blockquote>
+<p>最终出现<code>MboxAppCommon.podspec passed validation</code>即为验证通过</p>
+<h3 id="7、发布"><a href="#7、发布" class="headerlink" title="7、发布"></a><strong>7、发布</strong></h3><p>执行命令</p>
+<blockquote>
+<ul>
+<li>pod trunk push IFMMenu.podspec</li>
+</ul>
+</blockquote>
+<p>注意这一步比较慢,大概5到10分钟吧。到这里自己的私有pod库就制作完成了。</p>
+<h3 id="8、更新和维护"><a href="#8、更新和维护" class="headerlink" title="8、更新和维护"></a><strong>8、更新和维护</strong></h3><p>修改完自己的代码以后推送到远端，切记修改<code>podspec</code>文件中的版本号，并重新打<code>tag</code>上传，在进行新一轮的验证和发布。</p>
 
       
     </div>
@@ -397,7 +477,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/项目实战/" rel="tag"># 项目实战</a>
+            <a href="/tags/总结/" rel="tag"># 总结</a>
           
         </div>
       
@@ -410,15 +490,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2019/01/15/开发中遇到的坑/" rel="next" title="开发中遇到的一些坑">
+                <i class="fa fa-chevron-left"></i> 开发中遇到的一些坑
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/14/算法排序/" rel="prev" title="排序">
-                排序 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -574,7 +654,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#结合-SDWebImage-修改图片显示效果"><span class="nav-number">1.</span> <span class="nav-text">结合 SDWebImage 修改图片显示效果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、注册CocoaPods"><span class="nav-number">1.</span> <span class="nav-text">1、注册CocoaPods</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、github创建新仓库"><span class="nav-number">2.</span> <span class="nav-text">2、github创建新仓库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、创建本地代码库"><span class="nav-number">3.</span> <span class="nav-text">3、创建本地代码库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、本地代码创建成功，修改podspecs索引文件"><span class="nav-number">4.</span> <span class="nav-text">4、本地代码创建成功，修改podspecs索引文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5、验证自己的podspec"><span class="nav-number">5.</span> <span class="nav-text">5、验证自己的podspec</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7、发布"><span class="nav-number">6.</span> <span class="nav-text">7、发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8、更新和维护"><span class="nav-number">7.</span> <span class="nav-text">8、更新和维护</span></a></li></ol></div>
             
 
           </div>
