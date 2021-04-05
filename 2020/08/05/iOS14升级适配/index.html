@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="项目实战," />
+  <meta name="keywords" content="iOS," />
 
 
 
@@ -93,18 +93,22 @@
 
 
 
-<meta name="description" content="结合 SDWebImage 修改图片显示效果原理 method swizzling 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 ObjC runtime 的特性, 而 method swizzling 的核心方法就是 method_exchangeImplementations(SEL origin, SEL swizzle)使用这个方法就可以在运行时动态地改变原有的方法实现。">
-<meta name="keywords" content="项目实战">
+<meta name="description" content="1、模拟器编译报错 Xcode12之前，通过Valid Architectures 来配置支持的机型。 Xcode12，Valid Architectures 这一项被移除掉了,改变成了 VALID_ARCHS。   解决方案1：添加需要支持的指令 pod如果需要也要同步添加 解决方案2：删除VALID_ARCHS(C端测试可行)">
+<meta name="keywords" content="iOS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="method swizzling应用场景">
-<meta property="og:url" content="http://yoursite.com/2017/03/05/MethodSwizzling应用场景/index.html">
+<meta property="og:title" content="iOS14升级适配">
+<meta property="og:url" content="http://yoursite.com/2020/08/05/iOS14升级适配/index.html">
 <meta property="og:site_name" content="岁月如歌">
-<meta property="og:description" content="结合 SDWebImage 修改图片显示效果原理 method swizzling 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 ObjC runtime 的特性, 而 method swizzling 的核心方法就是 method_exchangeImplementations(SEL origin, SEL swizzle)使用这个方法就可以在运行时动态地改变原有的方法实现。">
+<meta property="og:description" content="1、模拟器编译报错 Xcode12之前，通过Valid Architectures 来配置支持的机型。 Xcode12，Valid Architectures 这一项被移除掉了,改变成了 VALID_ARCHS。   解决方案1：添加需要支持的指令 pod如果需要也要同步添加 解决方案2：删除VALID_ARCHS(C端测试可行)">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-10T15:24:01.378Z">
+<meta property="og:image" content="https://oss-public.fangdd.com/prod/static/Fgyh0rKkoclCm2w38wwzA6SlzVeV.png">
+<meta property="og:image" content="https://oss-public.fangdd.com/prod/static/FqOU5tjZTeD34psuvN_YcSpK2IgR.png">
+<meta property="og:image" content="https://oss-public.fangdd.com/prod/static/FhofOC574-mgJjzdw88Nx2y9CEdt.png">
+<meta property="og:updated_time" content="2021-04-05T14:16:44.738Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="method swizzling应用场景">
-<meta name="twitter:description" content="结合 SDWebImage 修改图片显示效果原理 method swizzling 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 ObjC runtime 的特性, 而 method swizzling 的核心方法就是 method_exchangeImplementations(SEL origin, SEL swizzle)使用这个方法就可以在运行时动态地改变原有的方法实现。">
+<meta name="twitter:title" content="iOS14升级适配">
+<meta name="twitter:description" content="1、模拟器编译报错 Xcode12之前，通过Valid Architectures 来配置支持的机型。 Xcode12，Valid Architectures 这一项被移除掉了,改变成了 VALID_ARCHS。   解决方案1：添加需要支持的指令 pod如果需要也要同步添加 解决方案2：删除VALID_ARCHS(C端测试可行)">
+<meta name="twitter:image" content="https://oss-public.fangdd.com/prod/static/Fgyh0rKkoclCm2w38wwzA6SlzVeV.png">
 
 
 
@@ -132,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/03/05/MethodSwizzling应用场景/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/08/05/iOS14升级适配/"/>
 
 
 
 
 
-  <title>method swizzling应用场景 | 岁月如歌</title>
+  <title>iOS14升级适配 | 岁月如歌</title>
   
 
 
@@ -277,7 +281,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/05/MethodSwizzling应用场景/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/05/iOS14升级适配/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Justin Jia">
@@ -294,7 +298,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">method swizzling应用场景</h2>
+          <h2 class="post-title" itemprop="name headline">iOS14升级适配</h2>
         
 
         <div class="post-meta">
@@ -306,8 +310,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-05T18:25:42+08:00">
-                2017-03-05
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-05T22:04:57+08:00">
+                2020-08-05
               </time>
             
 
@@ -316,28 +320,6 @@
             
           </span>
 
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -363,11 +345,31 @@
       
 
       
-        <h3 id="结合-SDWebImage-修改图片显示效果"><a href="#结合-SDWebImage-修改图片显示效果" class="headerlink" title="结合 SDWebImage 修改图片显示效果"></a>结合 SDWebImage 修改图片显示效果</h3><p>原理 <code>method swizzling</code> 实际上就是一种在运行时动态修改原有方法的技术, 它实际上是基于 <code>ObjC runtime</code> 的特性, 而 <code>method swizzling</code> 的核心方法就是 <code>method_exchangeImplementations(SEL origin, SEL swizzle)</code>使用这个方法就可以在运行时动态地改变原有的方法实现。</p>
+        <h3 id="1、模拟器编译报错"><a href="#1、模拟器编译报错" class="headerlink" title="1、模拟器编译报错"></a>1、模拟器编译报错</h3><p><img src="https://oss-public.fangdd.com/prod/static/Fgyh0rKkoclCm2w38wwzA6SlzVeV.png" alt="此处输入图片的描述"></p>
+<h4 id="Xcode12之前，通过Valid-Architectures-来配置支持的机型。"><a href="#Xcode12之前，通过Valid-Architectures-来配置支持的机型。" class="headerlink" title="Xcode12之前，通过Valid Architectures 来配置支持的机型。"></a>Xcode12之前，通过Valid Architectures 来配置支持的机型。</h4><p><img src="https://oss-public.fangdd.com/prod/static/FqOU5tjZTeD34psuvN_YcSpK2IgR.png" alt="此处输入图片的描述"></p>
+<h4 id="Xcode12，Valid-Architectures-这一项被移除掉了-改变成了-VALID-ARCHS。"><a href="#Xcode12，Valid-Architectures-这一项被移除掉了-改变成了-VALID-ARCHS。" class="headerlink" title="Xcode12，Valid Architectures 这一项被移除掉了,改变成了 VALID_ARCHS。"></a>Xcode12，Valid Architectures 这一项被移除掉了,改变成了 VALID_ARCHS。</h4><p><img src="https://oss-public.fangdd.com/prod/static/FhofOC574-mgJjzdw88Nx2y9CEdt.png" alt="此处输入图片的描述"></p>
+<blockquote>
+<ul>
+<li>解决方案1：添加需要支持的指令 pod如果需要也要同步添加</li>
+<li>解决方案2：删除VALID_ARCHS(C端测试可行)</li>
+</ul>
+</blockquote>
 <a id="more"></a>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">+ (void)load &#123;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        </span><br><span class="line">        Class class = [self class];</span><br><span class="line">        </span><br><span class="line">        SEL originalSelector = @selector(sd_setImageWithURL:placeholderImage:);</span><br><span class="line">        SEL swizzledSelector = @selector(sd_fadeSetImageWithURL:placeholderImage:);</span><br><span class="line">        </span><br><span class="line">        Method originalMethod = class_getInstanceMethod(class, originalSelector);</span><br><span class="line">        Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);</span><br><span class="line">        </span><br><span class="line">        BOOL success = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));</span><br><span class="line">        if (success) &#123;</span><br><span class="line">            class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            method_exchangeImplementations(originalMethod, swizzledMethod);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">- (void)sd_fadeSetImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder &#123;</span><br><span class="line">    </span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    </span><br><span class="line">    [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageAvoidAutoSetImage completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) &#123;</span><br><span class="line">        if (!weakSelf || error) &#123;</span><br><span class="line">            return ;</span><br><span class="line">        &#125;</span><br><span class="line">        weakSelf.image = image;</span><br><span class="line">        if (image || cacheType == SDImageCacheTypeNone) &#123;</span><br><span class="line">            CATransition *transition = [CATransition animation];</span><br><span class="line">            transition.duration = 1;</span><br><span class="line">            transition.type = kCATransitionFade;</span><br><span class="line">            transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];</span><br><span class="line">            [self.layer addAnimation:transition forKey:nil];</span><br><span class="line">        &#125;</span><br><span class="line">        [weakSelf setNeedsLayout];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><a href="http://www.tanhao.me/code/160723.html/" target="_blank" rel="noopener">参考链接</a><br><a href="https://github.com/ZhenKaiJia/MethodSwizzlingDemo" target="_blank" rel="noopener">Demo 地址</a></p>
+<h3 id="2、相册权限"><a href="#2、相册权限" class="headerlink" title="2、相册权限"></a>2、相册权限</h3><h4 id="iOS14-新增了“Limited-Photo-Library-Access”-模式，在授权弹窗中增加了-Select-Photo-选项。用户可以在-App-请求调用相册时选择部分照片让-App-读取。"><a href="#iOS14-新增了“Limited-Photo-Library-Access”-模式，在授权弹窗中增加了-Select-Photo-选项。用户可以在-App-请求调用相册时选择部分照片让-App-读取。" class="headerlink" title="iOS14 新增了“Limited Photo Library Access” 模式，在授权弹窗中增加了 Select Photo 选项。用户可以在 App 请求调用相册时选择部分照片让 App 读取。"></a>iOS14 新增了“Limited Photo Library Access” 模式，在授权弹窗中增加了 Select Photo 选项。用户可以在 App 请求调用相册时选择部分照片让 App 读取。</h4><h4 id="iOS14-中当用户选择“PHAuthorizationStatusLimited”-时，如果未进行适配，有可能会在每次触发相册功能时都进行弹窗询问用户是否需要修改照片权限。"><a href="#iOS14-中当用户选择“PHAuthorizationStatusLimited”-时，如果未进行适配，有可能会在每次触发相册功能时都进行弹窗询问用户是否需要修改照片权限。" class="headerlink" title="iOS14 中当用户选择“PHAuthorizationStatusLimited” 时，如果未进行适配，有可能会在每次触发相册功能时都进行弹窗询问用户是否需要修改照片权限。"></a>iOS14 中当用户选择“PHAuthorizationStatusLimited” 时，如果未进行适配，有可能会在每次触发相册功能时都进行弹窗询问用户是否需要修改照片权限。</h4><blockquote>
+<p>对于这种情况可通过在Info.plist中设置<code>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</code>的值为 <code>YES</code>来阻止该弹窗反复弹出，并且可通过调用<code>PHPhotoLibrary.sharedPhotoLibrary.presentLimitedLibraryPickerFromViewController</code>重新选择图片。</p>
+</blockquote>
+<h4 id="DXPhotoPickerControllerSDK年久失修-需要重新选择SDK"><a href="#DXPhotoPickerControllerSDK年久失修-需要重新选择SDK" class="headerlink" title="DXPhotoPickerControllerSDK年久失修 需要重新选择SDK"></a>DXPhotoPickerControllerSDK年久失修 需要重新选择SDK</h4><h3 id="3、IDFA"><a href="#3、IDFA" class="headerlink" title="3、IDFA"></a>3、IDFA</h3><blockquote>
+<ul>
+<li>iOS14 中，系统会默认为用户关闭广告追踪权限。</li>
+<li>对于这种情况，我们需要去请求用户权限。首先需要在 Info.plist 中配置” NSUserTrackingUsageDescription “ 及描述文案，接着使用 AppTrackingTransparency 框架中的 ATTrackingManager 中的 requestTrackingAuthorizationWithCompletionHandler 请求用户权限，在用户授权后再去访问 IDFA 才能够获取到正确信息。</li>
+</ul>
+</blockquote>
+<h3 id="4、UILabel-添加-CAGradientLayer-作为背景失败"><a href="#4、UILabel-添加-CAGradientLayer-作为背景失败" class="headerlink" title="4、UILabel 添加 CAGradientLayer 作为背景失败"></a>4、UILabel 添加 CAGradientLayer 作为背景失败</h3><ol>
+<li>系统添加_UILabelContentLayer层用来显示文本。插入CAGradientLayer的时候会先渲染渐变层，再渲染文本层</li>
+<li>如果Label不包含中文，系统会把文本绘制在 UILabel.layer (_UILabelLayer) 层。此层是 CAGradientLayer 的父 layer，无论如何，都会先于 CAGradientLayer 层渲染。因此 CAGradientLayer 层渲染后，会遮盖文本，达不到目的。</li>
+<li>在 iOS14+，苹果做了优化，即便文本包含中文，也不会添加 _UILabelContentLayer 层，直接绘制在 _UILabelLayer 层。因此，再也不能实现一个 CAGradientLayer 作为背景了。</li>
+<li>禁止直接给UILabel添加CAGradientLayer，只能把 CAGradientLayer 放在 UILabel 的父视图上面，来实现渐变色背景。</li>
+</ol>
 
       
     </div>
@@ -397,7 +399,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/项目实战/" rel="tag"># 项目实战</a>
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
           
         </div>
       
@@ -410,14 +412,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2020/04/05/线程同步方案/" rel="next" title="线程同步方案">
+                <i class="fa fa-chevron-left"></i> 线程同步方案
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/14/算法排序/" rel="prev" title="排序">
-                排序 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/01/04/git 总结(转)/" rel="prev" title="git 总结(转)">
+                git 总结(转) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -565,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#结合-SDWebImage-修改图片显示效果"><span class="nav-number">1.</span> <span class="nav-text">结合 SDWebImage 修改图片显示效果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、模拟器编译报错"><span class="nav-number">1.</span> <span class="nav-text">1、模拟器编译报错</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Xcode12之前，通过Valid-Architectures-来配置支持的机型。"><span class="nav-number">1.1.</span> <span class="nav-text">Xcode12之前，通过Valid Architectures 来配置支持的机型。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Xcode12，Valid-Architectures-这一项被移除掉了-改变成了-VALID-ARCHS。"><span class="nav-number">1.2.</span> <span class="nav-text">Xcode12，Valid Architectures 这一项被移除掉了,改变成了 VALID_ARCHS。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、相册权限"><span class="nav-number">2.</span> <span class="nav-text">2、相册权限</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#iOS14-新增了“Limited-Photo-Library-Access”-模式，在授权弹窗中增加了-Select-Photo-选项。用户可以在-App-请求调用相册时选择部分照片让-App-读取。"><span class="nav-number">2.1.</span> <span class="nav-text">iOS14 新增了“Limited Photo Library Access” 模式，在授权弹窗中增加了 Select Photo 选项。用户可以在 App 请求调用相册时选择部分照片让 App 读取。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#iOS14-中当用户选择“PHAuthorizationStatusLimited”-时，如果未进行适配，有可能会在每次触发相册功能时都进行弹窗询问用户是否需要修改照片权限。"><span class="nav-number">2.2.</span> <span class="nav-text">iOS14 中当用户选择“PHAuthorizationStatusLimited” 时，如果未进行适配，有可能会在每次触发相册功能时都进行弹窗询问用户是否需要修改照片权限。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DXPhotoPickerControllerSDK年久失修-需要重新选择SDK"><span class="nav-number">2.3.</span> <span class="nav-text">DXPhotoPickerControllerSDK年久失修 需要重新选择SDK</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、IDFA"><span class="nav-number">3.</span> <span class="nav-text">3、IDFA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、UILabel-添加-CAGradientLayer-作为背景失败"><span class="nav-number">4.</span> <span class="nav-text">4、UILabel 添加 CAGradientLayer 作为背景失败</span></a></li></ol></div>
             
 
           </div>

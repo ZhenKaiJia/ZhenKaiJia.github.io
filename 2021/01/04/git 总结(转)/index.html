@@ -93,13 +93,13 @@
 
 
 
-<meta name="description" content="目录 配置 git config 初始化仓库 git init 克隆仓库 git clone 管理仓库 git remote 转移提交 git cherry-pick 临时保存 git stash 文件状态 git status 日志 git log 责怪 git blame 查看分支 git branch 切换分支一 git checkout 切换分支二 git switch 创建分支 git">
+<meta name="description" content="目录 配置 git config 初始化仓库 git init 克隆仓库 git clone 管理仓库 git remote 转移提交 git cherry-pick 临时保存 git stash 文件状态 git status 日志 git log 责怪 git blame">
 <meta name="keywords" content="总结">
 <meta property="og:type" content="article">
 <meta property="og:title" content="git 总结(转)">
 <meta property="og:url" content="http://yoursite.com/2021/01/04/git 总结(转)/index.html">
 <meta property="og:site_name" content="岁月如歌">
-<meta property="og:description" content="目录 配置 git config 初始化仓库 git init 克隆仓库 git clone 管理仓库 git remote 转移提交 git cherry-pick 临时保存 git stash 文件状态 git status 日志 git log 责怪 git blame 查看分支 git branch 切换分支一 git checkout 切换分支二 git switch 创建分支 git">
+<meta property="og:description" content="目录 配置 git config 初始化仓库 git init 克隆仓库 git clone 管理仓库 git remote 转移提交 git cherry-pick 临时保存 git stash 文件状态 git status 日志 git log 责怪 git blame">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2021/01/04/git%20总结(转)/media/gitclone-sparsecheckout.gif">
 <meta property="og:image" content="http://yoursite.com/2021/01/04/git%20总结(转)/media/cherry.gif">
@@ -110,10 +110,10 @@
 <meta property="og:image" content="http://yoursite.com/2021/01/04/git%20总结(转)/media/gitrebase-2.png">
 <meta property="og:image" content="http://yoursite.com/2021/01/04/git%20总结(转)/media/git-flow.png">
 <meta property="og:image" content="http://yoursite.com/2021/01/04/git%20总结(转)/media/git-merge-conflict.gif">
-<meta property="og:updated_time" content="2021-01-05T09:59:36.060Z">
+<meta property="og:updated_time" content="2021-04-05T14:02:32.781Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="git 总结(转)">
-<meta name="twitter:description" content="目录 配置 git config 初始化仓库 git init 克隆仓库 git clone 管理仓库 git remote 转移提交 git cherry-pick 临时保存 git stash 文件状态 git status 日志 git log 责怪 git blame 查看分支 git branch 切换分支一 git checkout 切换分支二 git switch 创建分支 git">
+<meta name="twitter:description" content="目录 配置 git config 初始化仓库 git init 克隆仓库 git clone 管理仓库 git remote 转移提交 git cherry-pick 临时保存 git stash 文件状态 git status 日志 git log 责怪 git blame">
 <meta name="twitter:image" content="http://yoursite.com/2021/01/04/git%20总结(转)/media/gitclone-sparsecheckout.gif">
 
 
@@ -383,6 +383,9 @@
 <li><a href="#文件状态">文件状态</a> git status</li>
 <li><a href="#日志">日志</a> git log</li>
 <li><a href="#责怪">责怪</a> git blame</li>
+</ul>
+<a id="more"></a>
+<ul>
 <li><a href="#查看分支">查看分支</a> git branch</li>
 <li><a href="#切换分支一">切换分支一</a> git checkout</li>
 <li><a href="#切换分支二">切换分支二</a> git switch</li>
@@ -422,7 +425,7 @@
 <li><a href="#加速">加速</a></li>
 <li><a href="#思维导图">思维导图</a></li>
 </ul>
-<a id="more"></a>
+<!-- more -->
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看全局配置列表</span></span><br><span class="line">git config --global -l</span><br><span class="line"><span class="comment"># 查看局部配置列表</span></span><br><span class="line">git config --<span class="built_in">local</span> -l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有的配置以及它们所在的文件</span></span><br><span class="line">git config --list --show-origin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看已设置的全局用户名/邮箱</span></span><br><span class="line">git config --global --get user.name</span><br><span class="line">git config --global --get user.email</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置全局用户名/邮箱</span></span><br><span class="line">git config --global user.name <span class="string">"xiejiahe"</span></span><br><span class="line">git config --global user.email <span class="string">"example@example.com"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置本地当前工作区仓库用户名/邮箱</span></span><br><span class="line">git config --<span class="built_in">local</span> user.name <span class="string">"xiejiahe"</span></span><br><span class="line">git config --<span class="built_in">local</span> user.email <span class="string">"example@example.com"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除配置</span></span><br><span class="line">git config --<span class="built_in">unset</span> --global user.name</span><br><span class="line">git config --<span class="built_in">unset</span> --global user.email</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改默认文本编辑器，比如 nano</span></span><br><span class="line"><span class="comment"># 常用编辑器：emacs / nano / vim / vi</span></span><br><span class="line">git config --global core.editor nano</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将默认差异化分析工具设置为 vimdiff</span></span><br><span class="line">git config --global merge.tool vimdiff</span><br><span class="line"></span><br><span class="line"><span class="comment"># 编辑当前仓库配置文件</span></span><br><span class="line">git config -e  <span class="comment"># 等价 vi .git/config</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件权限的变动也会视为改动, 可通过以下配置忽略文件权限变动</span></span><br><span class="line">git config core.fileMode <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 文件大小写设为敏感, git默认是忽略大小写</span></span><br><span class="line">git config --global core.ignorecase <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 git pull 时默认拉取所有子模块内容</span></span><br><span class="line">git config submodule.recurse <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 记住提交账号密码, 下次操作可免账号密码</span></span><br><span class="line">git config --global credential.helper store</span><br></pre></td></tr></table></figure>
 <h4 id="命令别名配置"><a href="#命令别名配置" class="headerlink" title="命令别名配置"></a>命令别名配置</h4><p>git 可以使用别名来简化一些复杂命令，类似 <a href="https://github.com/xjh22222228/linux-manual#alias" target="_blank" rel="noopener">alias</a> 命令。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># git st 等价于 git status</span></span><br><span class="line">git config --global alias.st status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果之前添加过，需要添加 --replace-all 进行覆盖</span></span><br><span class="line">git config --global --replace-all alias.st status</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行外部命令, 只要在前面加 ! 即可</span></span><br><span class="line">git config --global alias.st <span class="string">'!echo hello'</span>;</span><br><span class="line"><span class="comment"># 加 "!" 可以执行外部命令执行一段复杂的合并代码过程，例如：</span></span><br><span class="line">git config --global alias.mg <span class="string">'!git checkout develop &amp;&amp; git pull &amp;&amp; git merge master &amp;&amp; git checkout -'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 删除 st 别名</span></span><br><span class="line">git config --global --<span class="built_in">unset</span> alias.st</span><br></pre></td></tr></table></figure>
@@ -933,8 +936,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/21/私有库制作/" rel="next" title="创建自己私有pod">
-                <i class="fa fa-chevron-left"></i> 创建自己私有pod
+              <a href="/2020/08/05/iOS14升级适配/" rel="next" title="iOS14升级适配">
+                <i class="fa fa-chevron-left"></i> iOS14升级适配
               </a>
             
           </div>
@@ -1014,7 +1017,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1036,7 +1039,7 @@
             
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               
             </div>

@@ -1,4 +1,6 @@
 http://yoursite.com/2021/01/04/git 总结(转)/
+http://yoursite.com/2020/08/05/iOS14升级适配/
+http://yoursite.com/2020/04/05/线程同步方案/
 http://yoursite.com/2019/01/21/私有库制作/
 http://yoursite.com/2019/01/15/开发中遇到的坑/
 http://yoursite.com/2018/08/05/线程总结/

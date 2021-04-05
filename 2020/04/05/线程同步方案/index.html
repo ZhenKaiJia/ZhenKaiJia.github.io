@@ -1,0 +1,791 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="“iOS小屋”" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="多线程：可以在时间片里被CPU快速切换，达到多任务同时执行的目的。 优点：资源利用率更好、简化逻辑、加速相应缺陷：多个线程同时对同一个资源进行读写操作 线程安全1、atomic：用于保证属性的setter、getter的原子性操作，类似加了同步锁。2、自旋锁：如果在访问数据的时候，其他线程已经加锁，则在内部执行while操作。等待访问的资源解锁则立即执行。3、互斥锁：如果数据已经被其他线程加锁，当">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程同步方案">
+<meta property="og:url" content="http://yoursite.com/2020/04/05/线程同步方案/index.html">
+<meta property="og:site_name" content="岁月如歌">
+<meta property="og:description" content="多线程：可以在时间片里被CPU快速切换，达到多任务同时执行的目的。 优点：资源利用率更好、简化逻辑、加速相应缺陷：多个线程同时对同一个资源进行读写操作 线程安全1、atomic：用于保证属性的setter、getter的原子性操作，类似加了同步锁。2、自旋锁：如果在访问数据的时候，其他线程已经加锁，则在内部执行while操作。等待访问的资源解锁则立即执行。3、互斥锁：如果数据已经被其他线程加锁，当">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://oss-public.fangdd.com/prod/static/FiOrP7_ZJmc5QwJHpEG5fGUiIoRW.png">
+<meta property="og:image" content="https://oss-public.fangdd.com/prod/static/FnCMVsA_6KhexUSORhiWf7oASS50.png">
+<meta property="og:updated_time" content="2021-04-05T14:18:18.788Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程同步方案">
+<meta name="twitter:description" content="多线程：可以在时间片里被CPU快速切换，达到多任务同时执行的目的。 优点：资源利用率更好、简化逻辑、加速相应缺陷：多个线程同时对同一个资源进行读写操作 线程安全1、atomic：用于保证属性的setter、getter的原子性操作，类似加了同步锁。2、自旋锁：如果在访问数据的时候，其他线程已经加锁，则在内部执行while操作。等待访问的资源解锁则立即执行。3、互斥锁：如果数据已经被其他线程加锁，当">
+<meta name="twitter:image" content="https://oss-public.fangdd.com/prod/static/FiOrP7_ZJmc5QwJHpEG5fGUiIoRW.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/05/线程同步方案/"/>
+
+
+
+
+
+  <title>线程同步方案 | 岁月如歌</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">岁月如歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">工作就是和一群快乐的人做一件快乐的事</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/05/线程同步方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Justin Jia">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="岁月如歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">线程同步方案</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-05T22:16:30+08:00">
+                2020-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>多线程：可以在时间片里被<code>CPU</code>快速切换，达到多任务同时执行的目的。</p>
+<p>优点：资源利用率更好、简化逻辑、加速相应<br>缺陷：多个线程同时对同一个资源进行读写操作</p>
+<h4 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h4><p>1、atomic：用于保证属性的<code>setter</code>、<code>getter</code>的原子性操作，类似加了同步锁。<br>2、自旋锁：如果在访问数据的时候，其他线程已经加锁，则在内部执行<code>while</code>操作。等待访问的资源解锁则立即执行。<br>3、互斥锁：如果数据已经被其他线程加锁，当前线程会执行休眠操作，等待其他解锁才会重新唤醒当前线程。</p>
+<a id="more"></a>
+<h4 id="OSSpinLock"><a href="#OSSpinLock" class="headerlink" title="OSSpinLock"></a>OSSpinLock</h4><blockquote>
+<p><code>iOS10</code>被废弃、自旋锁的BUG，高优先级的线程在占用<code>CPU</code>资源进行忙等，低优先级需要等待高优先级执行完再执行，导致死锁</p>
+</blockquote>
+<h4 id="信号量-DispatchSemaphore"><a href="#信号量-DispatchSemaphore" class="headerlink" title="信号量 DispatchSemaphore"></a>信号量 DispatchSemaphore</h4><blockquote>
+<p>初始值：用来控制线程并发访问的最大数量<br>如果初始值为1，则代表只允许1条线程进行访问，保证线程同步</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">semaphore = 1</span><br><span class="line">如果信号量小于1 需要执行任务的线程进行休眠</span><br><span class="line">如果大于1 则信号量减1，执行加锁操作，完成后信号量加1，解锁完成</span><br></pre></td></tr></table></figure>
+<p><img src="https://oss-public.fangdd.com/prod/static/FiOrP7_ZJmc5QwJHpEG5fGUiIoRW.png" alt="此处输入图片的描述"></p>
+<p><img src="https://oss-public.fangdd.com/prod/static/FnCMVsA_6KhexUSORhiWf7oASS50.png" alt="此处输入图片的描述"></p>
+<h4 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h4><h5 id="1-os-unfair-lock"><a href="#1-os-unfair-lock" class="headerlink" title="1. os_unfair _lock"></a>1. os_unfair _lock</h5><blockquote>
+<p><code>iOS10</code>出现，替代不安全的<code>OSSpinLock</code></p>
+</blockquote>
+<p><strong>2. mutex</strong></p>
+<h5 id="pthread-mutex"><a href="#pthread-mutex" class="headerlink" title="pthread_mutex"></a><strong>pthread_mutex</strong></h5><blockquote>
+<p>PTHREAD_MUTEX _NORMAL </p>
+</blockquote>
+<blockquote>
+<p>PTHREAD_MUTEX _DEFAULT </p>
+</blockquote>
+<blockquote>
+<p>PTHREAD_MUTEX _ERRORCHECK</p>
+</blockquote>
+<blockquote>
+<p>PTHREAD_MUTEX _RECURSIVE //递归锁</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">var attr = pthread_mutexattr_t() /// 初始化属性</span><br><span class="line">pthread_mutexattr_init(&amp;attr)</span><br><span class="line">pthread_mutexattr_settype(&amp;attr, PTHREAD_MUTEX_DEFAULT)</span><br><span class="line"></span><br><span class="line">var mutex = pthread_mutex_t() /// 初始化锁</span><br><span class="line">pthread_mutex_init(&amp;mutex, &amp;attr)</span><br><span class="line">pthread_mutex_lock(&amp;mutex) /// 加锁</span><br><span class="line">pthread_mutex_unlock(&amp;mutex) /// 解锁</span><br><span class="line"></span><br><span class="line">var condition = pthread_cond_t() /// 初始化条件</span><br><span class="line">pthread_cond_init(&amp;condition, nil)</span><br><span class="line">pthread_cond_wait(&amp;condition, &amp;mutex) ///等待条件，进入休眠，放开锁</span><br><span class="line">pthread_cond_signal(&amp;condition)   /// 激活等待该条件的线程</span><br><span class="line">pthread_cond_broadcast(&amp;condition)  ///激活等待该条件的线程</span><br><span class="line"></span><br><span class="line">pthread_mutexattr_destroy(&amp;attr)</span><br><span class="line">pthread_mutex_destroy(&amp;mutex)</span><br><span class="line">pthread_cond_destroy(&amp;condition)</span><br></pre></td></tr></table></figure>
+<h5 id="NSLock"><a href="#NSLock" class="headerlink" title="NSLock"></a>NSLock</h5><blockquote>
+<p>最简单额互斥锁，但是是非递归的。 直接封装了<code>pthread_mutex</code></p>
+</blockquote>
+<h5 id="NSRecursiveLock"><a href="#NSRecursiveLock" class="headerlink" title="NSRecursiveLock"></a>NSRecursiveLock</h5><blockquote>
+<p>对mutex递归锁的封装</p>
+</blockquote>
+<h5 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h5><blockquote>
+<p>是对mutex和cond的封装</p>
+</blockquote>
+<h5 id="NSConditionLock"><a href="#NSConditionLock" class="headerlink" title="NSConditionLock"></a>NSConditionLock</h5><blockquote>
+<p>对<code>NSCondition</code>的进一步封装，可以设置具体的条件值</p>
+</blockquote>
+<h5 id="synchronized"><a href="#synchronized" class="headerlink" title="@synchronized"></a>@synchronized</h5><blockquote>
+<p>对<code>mutex</code>递归锁的封装。<code>iOS</code>常用但是性能较低<br><code>runtime</code>会在内部会生成对应的递归锁并存在哈希表中，然后再进行加锁解锁操作。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@synchronized (self) &#123;</span><br><span class="line">                    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>3. 读写安全</strong></p>
+<blockquote>
+<p>同一个资源，同一时间只能有一个线程写，允许有多个线程同时读，不允许读写同时发生</p>
+</blockquote>
+<p>1、pthread_rwlock 读写锁</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var rwlock = pthread_rwlock_t() /// 初始化</span><br><span class="line">pthread_rwlock_wrlock(&amp;rwlock) /// 写</span><br><span class="line">pthread_rwlock_unlock(&amp;rwlock)</span><br><span class="line"></span><br><span class="line">pthread_rwlock_rdlock(&amp;rwlock) /// 读</span><br><span class="line">pthread_rwlock_unlock(&amp;rwlock) /// 解锁</span><br></pre></td></tr></table></figure>
+<p>2、dispatch_barrier _async：异步栅栏调用</p>
+<blockquote>
+<p>必须是自己创建的并发队列</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let queue = DispatchQueue.init(label: &quot;aaa&quot;, qos: DispatchQoS.default, attributes: DispatchQueue.Attributes.concurrent, autoreleaseFrequency: DispatchQueue.AutoreleaseFrequency.inherit, target: nil)</span><br><span class="line"></span><br><span class="line">for i in 0..&lt;10 &#123;</span><br><span class="line">    queue.async &#123;</span><br><span class="line">        sleep(1)</span><br><span class="line">        print(&quot;---&quot;, Date())</span><br><span class="line">    &#125;</span><br><span class="line">    queue.async(flags: .barrier) &#123;</span><br><span class="line">        sleep(1)</span><br><span class="line">        print(&quot;++++++++&quot;, Date())</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/21/私有库制作/" rel="next" title="创建自己私有pod">
+                <i class="fa fa-chevron-left"></i> 创建自己私有pod
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/05/iOS14升级适配/" rel="prev" title="iOS14升级适配">
+                iOS14升级适配 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div id="sidebar-dimmer"></div>
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Justin Jia" />
+          <p class="site-author-name" itemprop="name">Justin Jia</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ZhenKaiJia" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#线程安全"><span class="nav-number">1.</span> <span class="nav-text">线程安全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OSSpinLock"><span class="nav-number">2.</span> <span class="nav-text">OSSpinLock</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#信号量-DispatchSemaphore"><span class="nav-number">3.</span> <span class="nav-text">信号量 DispatchSemaphore</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#互斥锁"><span class="nav-number">4.</span> <span class="nav-text">互斥锁</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-os-unfair-lock"><span class="nav-number">4.1.</span> <span class="nav-text">1. os_unfair _lock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pthread-mutex"><span class="nav-number">4.2.</span> <span class="nav-text">pthread_mutex</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSLock"><span class="nav-number">4.3.</span> <span class="nav-text">NSLock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSRecursiveLock"><span class="nav-number">4.4.</span> <span class="nav-text">NSRecursiveLock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSCondition"><span class="nav-number">4.5.</span> <span class="nav-text">NSCondition</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NSConditionLock"><span class="nav-number">4.6.</span> <span class="nav-text">NSConditionLock</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#synchronized"><span class="nav-number">4.7.</span> <span class="nav-text">@synchronized</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Justin Jia</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
