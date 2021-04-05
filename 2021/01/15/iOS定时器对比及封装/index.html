@@ -1,0 +1,763 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="一、介绍iOS常用计时器包括NSTimer、CADisplayLink、GCD定时器。本次主要介绍三种定时器的使用，以及全局定时器的封装。过程主要涉及知识点定时器、多线程、锁、消息转发。 二、使用">
+<meta name="keywords" content="iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS定时器对比及封装">
+<meta property="og:url" content="http://yoursite.com/2021/01/15/iOS定时器对比及封装/index.html">
+<meta property="og:site_name" content="岁月如歌">
+<meta property="og:description" content="一、介绍iOS常用计时器包括NSTimer、CADisplayLink、GCD定时器。本次主要介绍三种定时器的使用，以及全局定时器的封装。过程主要涉及知识点定时器、多线程、锁、消息转发。 二、使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2abaa990259d40f8a41e459cf484c20c~tplv-k3u1fbpfcp-zoom-1.image">
+<meta property="og:updated_time" content="2021-04-05T14:34:57.638Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS定时器对比及封装">
+<meta name="twitter:description" content="一、介绍iOS常用计时器包括NSTimer、CADisplayLink、GCD定时器。本次主要介绍三种定时器的使用，以及全局定时器的封装。过程主要涉及知识点定时器、多线程、锁、消息转发。 二、使用">
+<meta name="twitter:image" content="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2abaa990259d40f8a41e459cf484c20c~tplv-k3u1fbpfcp-zoom-1.image">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/01/15/iOS定时器对比及封装/"/>
+
+
+
+
+
+  <title>iOS定时器对比及封装 | 岁月如歌</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">岁月如歌</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">工作就是和一群快乐的人做一件快乐的事</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/15/iOS定时器对比及封装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Justin Jia">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="岁月如歌">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">iOS定时器对比及封装</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-15T22:28:34+08:00">
+                2021-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、介绍"><a href="#一、介绍" class="headerlink" title="一、介绍"></a>一、介绍</h2><p>iOS常用计时器包括<code>NSTimer</code>、<code>CADisplayLink</code>、<code>GCD定时器</code>。本次主要介绍三种定时器的使用，以及全局定时器的封装。过程主要涉及知识点<strong>定时器</strong>、<strong>多线程</strong>、<strong>锁</strong>、<strong>消息转发</strong>。</p>
+<h2 id="二、使用"><a href="#二、使用" class="headerlink" title="二、使用"></a>二、使用</h2><p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2abaa990259d40f8a41e459cf484c20c~tplv-k3u1fbpfcp-zoom-1.image" alt=""></p>
+<a id="more"></a>
+<h3 id="1、Timer"><a href="#1、Timer" class="headerlink" title="1、Timer"></a>1、Timer</h3><h4 id="第一种-这种会导致循环引用，因为self强引用timer，timer强引用target，会导致定时器释放失败。"><a href="#第一种-这种会导致循环引用，因为self强引用timer，timer强引用target，会导致定时器释放失败。" class="headerlink" title="第一种 这种会导致循环引用，因为self强引用timer，timer强引用target，会导致定时器释放失败。"></a>第一种 这种会导致循环引用，因为<code>self</code>强引用<code>timer</code>，<code>timer</code>强引用<code>target</code>，会导致定时器释放失败。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(test), userInfo: nil, repeats: true)</span><br></pre></td></tr></table></figure>
+<h4 id="第二种-这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用。"><a href="#第二种-这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用。" class="headerlink" title="第二种 这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用。"></a>第二种 这个方法可以解决循环引用问题，但需要注意<code>timer</code>要加到<code>runloop</code>中才能正常使用。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: &#123;[weak self] (timer) in</span><br><span class="line">    self?.test()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="第三种-这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用，没有runloop只会执行一次。且需要手动唤醒定时器"><a href="#第三种-这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用，没有runloop只会执行一次。且需要手动唤醒定时器" class="headerlink" title="第三种 这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用，没有runloop只会执行一次。且需要手动唤醒定时器"></a>第三种 这个方法可以解决循环引用问题，但需要注意<code>timer</code>要加到<code>runloop</code>中才能正常使用，没有<code>runloop</code>只会执行一次。且需要手动唤醒定时器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">self.timer = Timer.init(timeInterval: 1, repeats: true, block: &#123;[weak self] (timer) in</span><br><span class="line">    guard let self = self else &#123; return &#125;</span><br><span class="line">    self.test()</span><br><span class="line">    RunLoop.main.add(timer, forMode: RunLoop.Mode.common)</span><br><span class="line">&#125;)</span><br><span class="line">self.timer?.fire()</span><br></pre></td></tr></table></figure>
+<h3 id="2、CADisplayLink"><a href="#2、CADisplayLink" class="headerlink" title="2、CADisplayLink"></a>2、CADisplayLink</h3><h4 id="初始化方法"><a href="#初始化方法" class="headerlink" title="初始化方法"></a>初始化方法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">self.link = CADisplayLink.init(target: self, selector: #selector(test))</span><br><span class="line">self.link?.preferredFramesPerSecond = 1</span><br><span class="line">self.link?.add(to: RunLoop.current, forMode: .default)</span><br></pre></td></tr></table></figure>
+<h4 id="使用CADisplayLink注意会出现和Timer相同的问题。1、循环引用-2、依赖runloop才能正常运行"><a href="#使用CADisplayLink注意会出现和Timer相同的问题。1、循环引用-2、依赖runloop才能正常运行" class="headerlink" title="使用CADisplayLink注意会出现和Timer相同的问题。1、循环引用 2、依赖runloop才能正常运行"></a>使用<code>CADisplayLink</code>注意会出现和<code>Timer</code>相同的问题。1、循环引用 2、依赖<code>runloop</code>才能正常运行</h4><h3 id="3、GCD定时器"><a href="#3、GCD定时器" class="headerlink" title="3、GCD定时器"></a>3、GCD定时器</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 创建定时器</span><br><span class="line">let queue = DispatchQueue.global()</span><br><span class="line">self.gcdTimer = DispatchSource.makeTimerSource(queue: queue)</span><br><span class="line">// self.gcdTimer?.schedule(wallDeadline: DispatchWallTime.now(), repeating: 1)</span><br><span class="line">self.gcdTimer?.schedule(deadline: DispatchTime.now(), repeating: 1)</span><br><span class="line">self.gcdTimer?.setEventHandler &#123; [weak self] in</span><br><span class="line">    self?.test()</span><br><span class="line">&#125;</span><br><span class="line">self.gcdTimer?.resume()</span><br></pre></td></tr></table></figure>
+<h4 id="使用GCD定时器需要有一个成员变量持有gcdTimer，否则会立刻释放"><a href="#使用GCD定时器需要有一个成员变量持有gcdTimer，否则会立刻释放" class="headerlink" title="使用GCD定时器需要有一个成员变量持有gcdTimer，否则会立刻释放"></a>使用GCD定时器需要有一个成员变量持有gcdTimer，否则会立刻释放</h4><h4 id="wallDeadline和deadline-区别可以参考-What-does-DispatchWallTime-do-on-iOS"><a href="#wallDeadline和deadline-区别可以参考-What-does-DispatchWallTime-do-on-iOS" class="headerlink" title="wallDeadline和deadline 区别可以参考 What does DispatchWallTime do on iOS?"></a><code>wallDeadline</code>和<code>deadline</code> 区别可以参考 <a href="https://stackoverflow.com/questions/51863940/what-does-dispatchwalltime-do-on-ios" target="_blank" rel="noopener">What does DispatchWallTime do on iOS?</a></h4><h2 id="三、对比结论"><a href="#三、对比结论" class="headerlink" title="三、对比结论"></a>三、对比结论</h2><blockquote>
+<ul>
+<li><code>Timer</code>和<code>CADisplayLink</code>使用会依赖<code>runloop</code>运行，而runloop同时会承担其他任务导致及时不准时。且使用不当容易引起内存泄漏</li>
+<li><code>GCD</code>直接和系统内核挂钩，且不依赖<code>runloop</code>，使用<code>GCD定时器</code>会更加准时</li>
+</ul>
+</blockquote>
+<h2 id="四、全局定时器封装"><a href="#四、全局定时器封装" class="headerlink" title="四、全局定时器封装"></a>四、全局定时器封装</h2><h4 id="接口参数设计"><a href="#接口参数设计" class="headerlink" title="接口参数设计"></a>接口参数设计</h4><blockquote>
+<ul>
+<li>全局定时器可能有多个运行，需要唯一标识</li>
+<li>设置定时器的开始时间</li>
+<li>设置定时器的间隔时间</li>
+<li>设置定时器是否重复执行</li>
+<li>设置定时器是否异步执行</li>
+<li>回调</li>
+</ul>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">class TimerManager: NSObject &#123;</span><br><span class="line">    </span><br><span class="line">    /// 每一个key都对应唯一的一个定时器， 固用字典存储</span><br><span class="line">    private var timers = NSMutableDictionary()</span><br><span class="line">    /// 因为涉及到多线程同时读写，为了避免出现错误，执行数据变更时需要加锁操作</span><br><span class="line">    private let semaphore = DispatchSemaphore.init(value: 1)</span><br><span class="line"></span><br><span class="line">    static var instance: TimerManager &#123;</span><br><span class="line">        struct Static &#123;</span><br><span class="line">            static let instance: TimerManager = TimerManager()</span><br><span class="line">        &#125;</span><br><span class="line">        return Static.instance</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// 倒计时消息转发</span><br><span class="line">    /// - Parameters:</span><br><span class="line">    ///   - timerKey: 倒计时key，需要保证唯一</span><br><span class="line">    ///   - targat: 消息转发</span><br><span class="line">    ///   - selector: 方法名</span><br><span class="line">    ///   - start: 开始时间</span><br><span class="line">    ///   - interval: 间隔时间</span><br><span class="line">    ///   - repeats: 是否重复</span><br><span class="line">    ///   - async: 是否异步</span><br><span class="line">    func schedule(timerKey: String, targat: NSObject, selector: Selector, start: DispatchTime = .now(), interval: TimeInterval = 1, repeats: Bool = true, async: Bool = true) &#123;</span><br><span class="line">        self.schedule(timerKey: timerKey, start: start, interval: interval, repeats: repeats, async: async) &#123; [weak targat] in</span><br><span class="line">            /// 检查targat是否能响应selector</span><br><span class="line">            if targat?.responds(to: selector) ?? false &#123;</span><br><span class="line">                targat?.perform(selector)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /// 倒计时block</span><br><span class="line">    /// - Parameters:</span><br><span class="line">    ///   - timerKey: 倒计时key，需要保证唯一</span><br><span class="line">    ///   - start: 开始时间</span><br><span class="line">    ///   - interval: 间隔时间</span><br><span class="line">    ///   - repeats: 是否重复</span><br><span class="line">    ///   - async: 是否异步</span><br><span class="line">    ///   - eventHandle: 回调</span><br><span class="line">    func schedule(timerKey: String, start: DispatchTime = .now(), interval: TimeInterval = 1, repeats: Bool = true, async: Bool = true, eventHandle: @escaping (() -&gt; Void)) &#123;</span><br><span class="line">        guard !timerKey.isEmpty || start.rawValue &lt;= 0 || interval &lt;= 0 else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        let timerQueue = async ? DispatchQueue.global() : DispatchQueue.main</span><br><span class="line">        let timer = DispatchSource.makeTimerSource(queue: timerQueue)</span><br><span class="line">        semaphore.wait()</span><br><span class="line">        timers[timerKey] = timer</span><br><span class="line">        semaphore.signal()</span><br><span class="line">        timer.schedule(deadline: start, repeating: interval)</span><br><span class="line">        timer.setEventHandler &#123; [weak self] in</span><br><span class="line">            eventHandle()</span><br><span class="line">            if !repeats &#123;</span><br><span class="line">                self?.cancelTask(timerKey: timerKey)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        timer.resume()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /// 取消定时器</span><br><span class="line">    /// - Parameter timerKey: 定时器标识</span><br><span class="line">    func cancelTask(timerKey: String) &#123;</span><br><span class="line">        guard !timerKey.isEmpty else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        guard let timer = timers[timerKey] as? DispatchSourceTimer else &#123;</span><br><span class="line">            return</span><br><span class="line">        &#125;</span><br><span class="line">        timer.cancel()</span><br><span class="line">        semaphore.wait()</span><br><span class="line">        timers.removeObject(forKey: timerKey)</span><br><span class="line">        semaphore.signal()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="外部调用"><a href="#外部调用" class="headerlink" title="外部调用"></a>外部调用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/// 消息转发</span><br><span class="line">TimerManager.instance.schedule(timerKey: self.theClassName, targat: self, selector: #selector(test))</span><br><span class="line"></span><br><span class="line">/// block回调</span><br><span class="line">TimerManager.instance.schedule(timerKey: self.theClassName) &#123; [weak self] in</span><br><span class="line">    self?.test()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="全局定时器内部没有考虑程序退到后台在回来时间间隔问题，解决方案如下"><a href="#全局定时器内部没有考虑程序退到后台在回来时间间隔问题，解决方案如下" class="headerlink" title="全局定时器内部没有考虑程序退到后台在回来时间间隔问题，解决方案如下"></a>全局定时器内部没有考虑程序退到后台在回来时间间隔问题，解决方案如下</h4><h5 id="1、监听通知，对比推出前和进入后的时间差，对数据源进行修改"><a href="#1、监听通知，对比推出前和进入后的时间差，对数据源进行修改" class="headerlink" title="1、监听通知，对比推出前和进入后的时间差，对数据源进行修改"></a>1、监听通知，对比推出前和进入后的时间差，对数据源进行修改</h5><h5 id="2、每次处理时间数据的时候保存NSDate-在下次执行数据处理之前先对比之前保存的NSDate和当前的时间差，然后在进行数据处理。代码如下"><a href="#2、每次处理时间数据的时候保存NSDate-在下次执行数据处理之前先对比之前保存的NSDate和当前的时间差，然后在进行数据处理。代码如下" class="headerlink" title="2、每次处理时间数据的时候保存NSDate(),在下次执行数据处理之前先对比之前保存的NSDate和当前的时间差，然后在进行数据处理。代码如下"></a>2、每次处理时间数据的时候保存<code>NSDate()</code>,在下次执行数据处理之前先对比之前保存的<code>NSDate</code>和当前的时间差，然后在进行数据处理。代码如下</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@objc func test() &#123;</span><br><span class="line">    /// 如果currentCount是逐渐减少的话需要在这里判断 如果小于0则执行销毁定时器的方法</span><br><span class="line">    // if currentCount &lt;= 0 &#123;</span><br><span class="line">        // TimerManager.instance.cancelTask(timerKey: self.theClassName)</span><br><span class="line">    // &#125;</span><br><span class="line"></span><br><span class="line">    if CacheManager.instance.hasCachedValue(with: self.theClassName) &#123;</span><br><span class="line">        if let cacheDate = CacheManager.instance.valueWithCache(key: self.theClassName) as? NSDate &#123;</span><br><span class="line">            if cacheDate.timeIntervalSinceNow &lt; -2 &#123;</span><br><span class="line">                ///因为时间差是负数 如果是倒计时 就加上时间差 反之则减去时间差</span><br><span class="line">                self.currentCount -= Int(cacheDate.timeIntervalSinceNow) + 1</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    CacheManager.instance.cacheData(NSDate(), withKey: self.theClassName)</span><br><span class="line"></span><br><span class="line">    currentCount += 1</span><br><span class="line">    print(currentCount)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="五、Demo代码地址"><a href="#五、Demo代码地址" class="headerlink" title="五、Demo代码地址"></a>五、<a href="https://github.com/ZhenKaiJia/Timer" target="_blank" rel="noopener">Demo代码地址</a></h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/04/git 总结(转)/" rel="next" title="git 总结(转)">
+                <i class="fa fa-chevron-left"></i> git 总结(转)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div id="sidebar-dimmer"></div>
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="Justin Jia" />
+          <p class="site-author-name" itemprop="name">Justin Jia</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ZhenKaiJia" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、介绍"><span class="nav-number">1.</span> <span class="nav-text">一、介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、使用"><span class="nav-number">2.</span> <span class="nav-text">二、使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、Timer"><span class="nav-number">2.1.</span> <span class="nav-text">1、Timer</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一种-这种会导致循环引用，因为self强引用timer，timer强引用target，会导致定时器释放失败。"><span class="nav-number">2.1.1.</span> <span class="nav-text">第一种 这种会导致循环引用，因为self强引用timer，timer强引用target，会导致定时器释放失败。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二种-这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用。"><span class="nav-number">2.1.2.</span> <span class="nav-text">第二种 这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三种-这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用，没有runloop只会执行一次。且需要手动唤醒定时器"><span class="nav-number">2.1.3.</span> <span class="nav-text">第三种 这个方法可以解决循环引用问题，但需要注意timer要加到runloop中才能正常使用，没有runloop只会执行一次。且需要手动唤醒定时器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、CADisplayLink"><span class="nav-number">2.2.</span> <span class="nav-text">2、CADisplayLink</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#初始化方法"><span class="nav-number">2.2.1.</span> <span class="nav-text">初始化方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用CADisplayLink注意会出现和Timer相同的问题。1、循环引用-2、依赖runloop才能正常运行"><span class="nav-number">2.2.2.</span> <span class="nav-text">使用CADisplayLink注意会出现和Timer相同的问题。1、循环引用 2、依赖runloop才能正常运行</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、GCD定时器"><span class="nav-number">2.3.</span> <span class="nav-text">3、GCD定时器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用GCD定时器需要有一个成员变量持有gcdTimer，否则会立刻释放"><span class="nav-number">2.3.1.</span> <span class="nav-text">使用GCD定时器需要有一个成员变量持有gcdTimer，否则会立刻释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#wallDeadline和deadline-区别可以参考-What-does-DispatchWallTime-do-on-iOS"><span class="nav-number">2.3.2.</span> <span class="nav-text">wallDeadline和deadline 区别可以参考 What does DispatchWallTime do on iOS?</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、对比结论"><span class="nav-number">3.</span> <span class="nav-text">三、对比结论</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、全局定时器封装"><span class="nav-number">4.</span> <span class="nav-text">四、全局定时器封装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#接口参数设计"><span class="nav-number">4.0.1.</span> <span class="nav-text">接口参数设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#外部调用"><span class="nav-number">4.0.2.</span> <span class="nav-text">外部调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局定时器内部没有考虑程序退到后台在回来时间间隔问题，解决方案如下"><span class="nav-number">4.0.3.</span> <span class="nav-text">全局定时器内部没有考虑程序退到后台在回来时间间隔问题，解决方案如下</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1、监听通知，对比推出前和进入后的时间差，对数据源进行修改"><span class="nav-number">4.0.3.1.</span> <span class="nav-text">1、监听通知，对比推出前和进入后的时间差，对数据源进行修改</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2、每次处理时间数据的时候保存NSDate-在下次执行数据处理之前先对比之前保存的NSDate和当前的时间差，然后在进行数据处理。代码如下"><span class="nav-number">4.0.3.2.</span> <span class="nav-text">2、每次处理时间数据的时候保存NSDate(),在下次执行数据处理之前先对比之前保存的NSDate和当前的时间差，然后在进行数据处理。代码如下</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、Demo代码地址"><span class="nav-number">5.</span> <span class="nav-text">五、Demo代码地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Justin Jia</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
